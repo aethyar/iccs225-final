@@ -3,28 +3,29 @@ CREATE OR REPLACE FUNCTION update_ingredient_stock()
     RETURNS TRIGGER AS
 $$
 DECLARE
-    needed_stock INT;
+    ingredient_id_list       INT[];
+    ingredient_quantity_list INT[];
+    i                        INT;
 BEGIN
-    -- Calculate the total quantity of each ingredient needed for the transaction
-    SELECT SUM(if.quantity * t.quantity)
-    INTO needed_stock
-    FROM transactions t
-             JOIN ingredient_food if ON t.food_id = if.food_id
-    WHERE t.transaction_id = NEW.transaction_id;
+    -- Fetch the list of ingredient IDs and their respective quantities for the given food_id
+    SELECT ARRAY(SELECT if.ingredient_id FROM ingredient_food if WHERE if.food_id = NEW.food_id),
+           ARRAY(SELECT if.quantity FROM ingredient_food if WHERE if.food_id = NEW.food_id)
+    INTO ingredient_id_list, ingredient_quantity_list;
 
-    -- Update the stock of each ingredient
-    UPDATE ingredients i
-    SET stock = stock - needed_stock
-    WHERE i.ingredient_id IN (SELECT if.ingredient_id FROM ingredient_food if WHERE if.food_id = NEW.food_id);
+    -- Loop through each ingredient and update its stock
+    FOR i IN 1..array_length(ingredient_id_list, 1)
+        LOOP
+            -- Update the stock of the ingredient based on the quantity used in the transaction
+            UPDATE ingredients
+            SET stock = stock - (NEW.quantity * ingredient_quantity_list[i])
+            WHERE ingredient_id = ingredient_id_list[i];
 
-    -- Check if stock becomes negative
-    IF (SELECT stock
-        FROM ingredients
-        WHERE ingredient_id IN (SELECT if.ingredient_id FROM ingredient_food if WHERE if.food_id = NEW.food_id)) <
-       0 THEN
-        -- Raise an exception if stock becomes negative
-        RAISE EXCEPTION 'Stock of ingredient(s) became negative after transaction. Transaction cancelled.';
-    END IF;
+            -- Check if the updated stock is negative
+            IF (SELECT stock FROM ingredients WHERE ingredient_id = ingredient_id_list[i]) < 0 THEN
+                -- Raise an exception if stock becomes negative
+                RAISE EXCEPTION 'Stock of ingredient % became negative after transaction. Transaction cancelled.', ingredient_id_list[i];
+            END IF;
+        END LOOP;
 
     RETURN NEW;
 END;
@@ -37,6 +38,7 @@ CREATE TRIGGER after_transaction_update_ingredient_stock
     ON transactions
     FOR EACH ROW
 EXECUTE FUNCTION update_ingredient_stock();
+
 
 -- Create a trigger function to generate an alert when inventory stock is updated
 CREATE OR REPLACE FUNCTION check_inventory_threshold()
