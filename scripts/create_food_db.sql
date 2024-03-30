@@ -10,7 +10,7 @@ CREATE TABLE "ingredients"
     "name"            VARCHAR(100) NOT NULL,
     "description"     TEXT,
     "category"        VARCHAR(50)  NOT NULL,
-    "quantity"        INT          NOT NULL,
+    "stock"           INT          NOT NULL,
     "expiry_date"     DATE,
     "alert_threshold" INT
 );
@@ -42,5 +42,6 @@ CREATE TABLE "ingredient_food"
 (
     "ingredient_id" INT REFERENCES ingredients (ingredient_id),
     "food_id"       INT REFERENCES foods (food_id),
+    "quantity"      INT,
     PRIMARY KEY (ingredient_id, food_id)
 )

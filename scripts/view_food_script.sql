@@ -10,7 +10,7 @@ SELECT f.food_id,
        i.name            AS ingredient_name,
        i.description     AS ingredient_description,
        i.category        AS ingredient_category,
-       i.quantity        AS ingredient_quantity,
+       i.stock        AS ingredient_quantity,
        i.expiry_date     AS ingredient_expiry_date,
        i.alert_threshold AS ingredient_alert_threshold
 FROM foods f

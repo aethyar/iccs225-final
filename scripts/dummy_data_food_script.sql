@@ -1,5 +1,5 @@
 -- insert dummy data into ingredients table
-INSERT INTO ingredients (name, description, category, quantity, expiry_date, alert_threshold) VALUES
+INSERT INTO ingredients (name, description, category, stock, expiry_date, alert_threshold) VALUES
 ('Espresso Beans', 'High-quality espresso beans', 'Coffee', 50, '2024-06-30', 10),
 ('Milk', 'Fresh milk', 'Dairy', 100, '2024-04-30', 20),
 ('Sugar', 'White sugar', 'Sweetener', 200, NULL, 50),
@@ -21,10 +21,10 @@ INSERT INTO transactions (time, food_id, quantity, total_price) VALUES
 ('2024-03-31 10:00:00', 4, 2, 4.00);
 
 -- insert dummy data into ingredient_food table
-INSERT INTO ingredient_food (ingredient_id, food_id) VALUES
-(1, 1), -- Espresso Beans used in Espresso
-(2, 2), -- Milk used in Latte
-(1, 3), -- Espresso Beans used in Cappuccino
-(2, 3), -- Milk used in Cappuccino
-(2, 4), -- Milk used in Croissant
-(5, 4); -- Butter used in Croissant
+INSERT INTO ingredient_food (ingredient_id, food_id, quantity) VALUES
+(1, 1, 2), -- 2 units of Espresso Beans used in Espresso
+(2, 2, 1), -- 1 unit of Milk used in Latte
+(1, 3, 3), -- 3 units of Espresso Beans used in Cappuccino
+(2, 3, 2), -- 2 units of Milk used in Cappuccino
+(2, 4, 4), -- 4 units of Milk used in Croissant
+(5, 4, 3); -- 3 units of Butter used in Croissant
