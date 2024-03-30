@@ -14,12 +14,6 @@ INSERT INTO foods (name, description, category, cost, img_link) VALUES
 ('Croissant', 'Buttery, flaky pastry originating from France.', 'Pastry', 2.00, NULL),
 ('Chocolate Croissant', 'Croissant filled with chocolate.', 'Pastry', 2.50, NULL);
 
--- insert dummy data into transactions table
-INSERT INTO transactions (time, food_id, quantity, total_price) VALUES
-('2024-03-31 08:30:00', 1, 1, 2.50),
-('2024-03-31 09:15:00', 2, 1, 3.00),
-('2024-03-31 10:00:00', 4, 2, 4.00);
-
 -- insert dummy data into ingredient_food table
 INSERT INTO ingredient_food (ingredient_id, food_id, quantity) VALUES
 (1, 1, 2), -- 2 units of Espresso Beans used in Espresso
@@ -28,3 +22,9 @@ INSERT INTO ingredient_food (ingredient_id, food_id, quantity) VALUES
 (2, 3, 2), -- 2 units of Milk used in Cappuccino
 (2, 4, 4), -- 4 units of Milk used in Croissant
 (5, 4, 3); -- 3 units of Butter used in Croissant
+
+-- insert dummy data into transactions table
+INSERT INTO transactions (time, food_id, quantity, total_price) VALUES
+('2024-03-31 08:30:00', 1, 1, 2.50),
+('2024-03-31 09:15:00', 2, 1, 3.00),
+('2024-03-31 10:00:00', 4, 2, 4.00);

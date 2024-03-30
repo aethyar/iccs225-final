@@ -26,6 +26,15 @@ CREATE TABLE "foods"
     "img_link"    VARCHAR(255)
 );
 
+-- create connection between ingredients and foods
+CREATE TABLE "ingredient_food"
+(
+    "ingredient_id" INT REFERENCES ingredients (ingredient_id),
+    "food_id"       INT REFERENCES foods (food_id),
+    "quantity"      INT,
+    PRIMARY KEY (ingredient_id, food_id)
+);
+
 -- create transactions
 CREATE TABLE "transactions"
 (
@@ -35,13 +44,4 @@ CREATE TABLE "transactions"
     "quantity"       INT            NOT NULL,
     "total_price"    DECIMAL(10, 2) NOT NULL,
     CONSTRAINT fk_food FOREIGN KEY (food_id) REFERENCES foods (food_id)
-);
-
--- create connection between ingredients and foods
-CREATE TABLE "ingredient_food"
-(
-    "ingredient_id" INT REFERENCES ingredients (ingredient_id),
-    "food_id"       INT REFERENCES foods (food_id),
-    "quantity"      INT,
-    PRIMARY KEY (ingredient_id, food_id)
 )
