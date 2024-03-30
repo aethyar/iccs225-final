@@ -37,3 +37,35 @@ CREATE TRIGGER after_transaction_update_ingredient_stock
     ON transactions
     FOR EACH ROW
 EXECUTE FUNCTION update_ingredient_stock();
+
+-- Create a trigger function to generate an alert when inventory stock is updated
+CREATE OR REPLACE FUNCTION check_inventory_threshold()
+    RETURNS TRIGGER AS
+$$
+DECLARE
+    ingredient_name VARCHAR(100);
+BEGIN
+    -- Get the name of the ingredient being updated
+    SELECT name
+    INTO ingredient_name
+    FROM ingredients
+    WHERE ingredient_id = NEW.ingredient_id;
+
+    -- Check if the updated stock is below the alert threshold
+    IF NEW.stock < NEW.alert_threshold THEN
+        -- Raise an alert
+        RAISE NOTICE 'Alert: Stock of % is below threshold. Current stock: %', ingredient_name, NEW.stock;
+    END IF;
+
+    RETURN NEW;
+END;
+$$
+    LANGUAGE plpgsql;
+
+-- Create the trigger to execute the trigger function after updating the inventory stock
+CREATE TRIGGER after_inventory_update_check_threshold
+    AFTER UPDATE OF stock
+    ON ingredients
+    FOR EACH ROW
+EXECUTE FUNCTION check_inventory_threshold();
+
