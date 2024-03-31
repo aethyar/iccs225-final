@@ -88,23 +88,23 @@ BEGIN
 
     -- Loop through each ingredient and update its stock
     FOR i IN 1..array_length(ingredient_id_list, 1)
-    LOOP
-        -- Update the stock of the ingredient based on the quantity used in the transaction
-        UPDATE ingredients
-        SET stock = stock - (NEW.quantity * ingredient_quantity_list[i])
-        WHERE ingredient_id = ingredient_id_list[i];
+        LOOP
+            -- Update the stock of the ingredient based on the quantity used in the transaction
+            UPDATE ingredients
+            SET stock = stock - (NEW.quantity * ingredient_quantity_list[i])
+            WHERE ingredient_id = ingredient_id_list[i];
 
-        -- Check if the updated stock is negative
-        IF (SELECT stock FROM ingredients WHERE ingredient_id = ingredient_id_list[i]) < 0 THEN
-            -- Raise an exception if stock becomes negative
-            RAISE EXCEPTION 'Stock of ingredient % became negative after transaction. Transaction cancelled.', ingredient_id_list[i];
-        END IF;
-    END LOOP;
+            -- Check if the updated stock is negative
+            IF (SELECT stock FROM ingredients WHERE ingredient_id = ingredient_id_list[i]) < 0 THEN
+                -- Raise an exception if stock becomes negative
+                RAISE EXCEPTION 'Stock of ingredient % became negative after transaction. Transaction cancelled.', ingredient_id_list[i];
+            END IF;
+        END LOOP;
 
     RETURN NEW;
 END;
 $$
-LANGUAGE plpgsql;
+    LANGUAGE plpgsql;
 
 -- Create the trigger to execute the trigger function after each transaction
 CREATE TRIGGER after_transaction_update_ingredient_stock
@@ -136,7 +136,7 @@ BEGIN
     RETURN NEW;
 END;
 $$
-LANGUAGE plpgsql;
+    LANGUAGE plpgsql;
 
 -- Create the trigger to execute the trigger function after updating the inventory stock
 CREATE TRIGGER after_inventory_update_check_threshold
@@ -162,23 +162,23 @@ BEGIN
 
     -- Loop through each ingredient and update its stock
     FOR i IN 1..array_length(ingredient_id_list, 1)
-    LOOP
-        -- Update the stock of the ingredient based on the quantity used in the transaction
-        UPDATE ingredients
-        SET stock = stock - (NEW.quantity * ingredient_quantity_list[i])
-        WHERE ingredient_id = ingredient_id_list[i];
+        LOOP
+            -- Update the stock of the ingredient based on the quantity used in the transaction
+            UPDATE ingredients
+            SET stock = stock - (NEW.quantity * ingredient_quantity_list[i])
+            WHERE ingredient_id = ingredient_id_list[i];
 
-        -- Check if the updated stock is negative
-        IF (SELECT stock FROM ingredients WHERE ingredient_id = ingredient_id_list[i]) < 0 THEN
-            -- Raise an exception if stock becomes negative
-            RAISE EXCEPTION 'Stock of ingredient % became negative after transaction. Transaction cancelled.', ingredient_id_list[i];
-        END IF;
-    END LOOP;
+            -- Check if the updated stock is negative
+            IF (SELECT stock FROM ingredients WHERE ingredient_id = ingredient_id_list[i]) < 0 THEN
+                -- Raise an exception if stock becomes negative
+                RAISE EXCEPTION 'Stock of ingredient % became negative after transaction. Transaction cancelled.', ingredient_id_list[i];
+            END IF;
+        END LOOP;
 
     RETURN NEW;
 END;
 $$
-LANGUAGE plpgsql;
+    LANGUAGE plpgsql;
 
 -- Create the trigger to execute the trigger function after each transaction
 CREATE TRIGGER after_transaction_update_ingredient_stock
@@ -210,7 +210,7 @@ BEGIN
     RETURN NEW;
 END;
 $$
-LANGUAGE plpgsql;
+    LANGUAGE plpgsql;
 
 -- Create the trigger to execute the trigger function after updating the inventory stock
 CREATE TRIGGER after_inventory_update_check_threshold

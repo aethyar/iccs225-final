@@ -34,46 +34,58 @@ $$
     LANGUAGE plpgsql;
 
 -- function for adding a transaction
-CREATE OR REPLACE FUNCTION add_transaction(new_time TIMESTAMP, new_food_id INT, new_quantity INT, new_total_price DECIMAL(10, 2))
-RETURNS VOID AS
+CREATE OR REPLACE FUNCTION add_transaction(new_time TIMESTAMP, new_food_id INT, new_quantity INT,
+                                           new_total_price DECIMAL(10, 2))
+    RETURNS VOID AS
 $$
 BEGIN
     INSERT INTO transactions (time, food_id, quantity, total_price)
     VALUES (new_time, new_food_id, new_quantity, new_total_price);
 END;
 $$
-LANGUAGE plpgsql;
+    LANGUAGE plpgsql;
 
 -- for updating staff info
-CREATE OR REPLACE FUNCTION update_staff_info(cur_staff_id INT, new_name VARCHAR(100), new_address TEXT, new_phone_number VARCHAR(20), new_email VARCHAR(100), new_hire_date DATE, new_position VARCHAR(50), new_salary DECIMAL(10, 2))
-RETURNS VOID AS
+CREATE OR REPLACE FUNCTION update_staff_info(cur_staff_id INT, new_name VARCHAR(100), new_address TEXT,
+                                             new_phone_number VARCHAR(20), new_email VARCHAR(100), new_hire_date DATE,
+                                             new_position VARCHAR(50), new_salary DECIMAL(10, 2))
+    RETURNS VOID AS
 $$
 BEGIN
     UPDATE staff
-    SET name = new_name, address = new_address, phone_number = new_phone_number, email = new_email, hire_date = new_hire_date, position = new_position, salary = new_salary
+    SET name         = new_name,
+        address      = new_address,
+        phone_number = new_phone_number,
+        email        = new_email,
+        hire_date    = new_hire_date,
+        position     = new_position,
+        salary       = new_salary
     WHERE staff_id = cur_staff_id;
 END;
 $$
-LANGUAGE plpgsql;
+    LANGUAGE plpgsql;
 
 -- for updating shift info
-CREATE OR REPLACE FUNCTION update_shift_info(cur_shift_id INT, new_staff_id INT, new_shift_start TIMESTAMP, new_shift_end TIMESTAMP)
-RETURNS VOID AS
+CREATE OR REPLACE FUNCTION update_shift_info(cur_shift_id INT, new_staff_id INT, new_shift_start TIMESTAMP,
+                                             new_shift_end TIMESTAMP)
+    RETURNS VOID AS
 $$
 BEGIN
     UPDATE shifts
-    SET staff_id = new_staff_id, shift_start = new_shift_start, shift_end = new_shift_end
+    SET staff_id    = new_staff_id,
+        shift_start = new_shift_start,
+        shift_end   = new_shift_end
     WHERE shift_id = cur_shift_id;
 END;
 $$
-LANGUAGE plpgsql;
+    LANGUAGE plpgsql;
 -- for recording attendance
 CREATE OR REPLACE FUNCTION record_attendance_function(cur_staff_id INT, cur_shift_id INT, cur_attendance_status BOOLEAN)
-RETURNS VOID AS
+    RETURNS VOID AS
 $$
 BEGIN
     INSERT INTO attendance (staff_id, shift_id, attendance_status, attendance_time)
     VALUES (cur_staff_id, cur_shift_id, cur_attendance_status, CURRENT_TIMESTAMP);
 END;
 $$
-LANGUAGE plpgsql;
+    LANGUAGE plpgsql;
