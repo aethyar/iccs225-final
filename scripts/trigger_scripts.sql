@@ -243,9 +243,7 @@ BEGIN
                 change_timestamp = NOW()
             WHERE shift_id = OLD.shift_id;
         ELSIF TG_OP = 'DELETE' THEN
-            INSERT INTO shifts(operation, shift_id, staff_id, shift_start, shift_end, attendance_status,
-                               change_timestamp)
-            VALUES ('DELETE', OLD.shift_id, OLD.staff_id, OLD.shift_start, OLD.shift_end, OLD.attendance_status, NOW());
+            DELETE FROM shifts WHERE shift_id = OLD.shift_id;
         END IF;
     END IF;
 

@@ -170,6 +170,16 @@ END;
 $$
     LANGUAGE plpgsql;
 
+-- For deleting staff info
+CREATE OR REPLACE FUNCTION delete_staff_info(cur_staff_id INT)
+RETURNS VOID AS
+$$
+BEGIN
+    DELETE FROM staff WHERE staff_id = cur_staff_id;
+END;
+$$
+LANGUAGE plpgsql;
+
 -- for updating shift info
 CREATE OR REPLACE FUNCTION update_shift_info(cur_shift_id INT, new_staff_id INT, new_shift_start TIMESTAMP,
                                              new_shift_end TIMESTAMP)
