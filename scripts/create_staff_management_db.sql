@@ -33,3 +33,6 @@ CREATE TABLE attendance
     CONSTRAINT fk_staff_attendance FOREIGN KEY (staff_id) REFERENCES staff (staff_id),
     CONSTRAINT fk_shift_attendance FOREIGN KEY (shift_id) REFERENCES shifts (shift_id)
 );
+
+ALTER TABLE attendance
+ADD COLUMN attendance_status BOOLEAN;
