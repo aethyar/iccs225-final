@@ -16,12 +16,3 @@ VALUES
     (3, '2024-03-30 16:00:00', '2024-03-30 20:00:00', true),
     (4, '2024-03-31 08:00:00', '2024-03-31 12:00:00', false),
     (5, '2024-03-31 12:00:00', '2024-03-31 16:00:00', true);
-
--- Inserting mock data into the attendance table
-INSERT INTO attendance (staff_id, shift_id, attendance_status, attendance_time)
-VALUES
-    (1, 1, true, '2024-03-30 07:55:00'),
-    (2, 2, true, '2024-03-30 11:55:00'),
-    (3, 3, true, '2024-03-30 15:55:00'),
-    (4, 4, false, '2024-03-31 07:55:00'),
-    (5, 5, true, '2024-03-31 11:55:00');

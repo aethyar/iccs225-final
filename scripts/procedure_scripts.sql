@@ -28,12 +28,26 @@ BEGIN
 END;
 $$;
 
--- procedure to update shift information
 CREATE OR REPLACE PROCEDURE update_shift_info(cur_shift_id INT, new_staff_id INT, new_shift_start TIMESTAMP, new_shift_end TIMESTAMP)
-LANGUAGE plpgsql AS $$
+AS $$
+DECLARE
+    change_timestamp TIMESTAMP;
 BEGIN
+    -- Get the current timestamp
+    change_timestamp := NOW();
+
+    -- Update the shifts table
     UPDATE shifts
-    SET staff_id = new_staff_id, shift_start = new_shift_start, shift_end = new_shift_end
+    SET
+        staff_id = new_staff_id,
+        shift_start = new_shift_start,
+        shift_end = new_shift_end,
+        change_timestamp = change_timestamp
     WHERE shift_id = cur_shift_id;
+
+    -- Log the shift update
+    INSERT INTO shifts (operation, shift_id, staff_id, shift_start, shift_end, change_timestamp)
+    VALUES ('UPDATE', cur_shift_id, new_staff_id, new_shift_start, new_shift_end, change_timestamp);
+
 END;
-$$;
+$$ LANGUAGE plpgsql;
