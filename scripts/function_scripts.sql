@@ -32,6 +32,18 @@ BEGIN
 END;
 $$
     LANGUAGE plpgsql;
+
+-- function for adding a transaction
+CREATE OR REPLACE FUNCTION add_transaction(new_time TIMESTAMP, new_food_id INT, new_quantity INT, new_total_price DECIMAL(10, 2))
+RETURNS VOID AS
+$$
+BEGIN
+    INSERT INTO transactions (time, food_id, quantity, total_price)
+    VALUES (new_time, new_food_id, new_quantity, new_total_price);
+END;
+$$
+LANGUAGE plpgsql;
+
 -- for updating staff info
 CREATE OR REPLACE FUNCTION update_staff_info(cur_staff_id INT, new_name VARCHAR(100), new_address TEXT, new_phone_number VARCHAR(20), new_email VARCHAR(100), new_hire_date DATE, new_position VARCHAR(50), new_salary DECIMAL(10, 2))
 RETURNS VOID AS
