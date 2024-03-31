@@ -218,3 +218,37 @@ CREATE TRIGGER after_inventory_update_check_threshold
     ON ingredients
     FOR EACH ROW
 EXECUTE FUNCTION check_inventory_threshold();
+
+-- triggers for staff databases
+-- Trigger function for logging shift changes
+CREATE OR REPLACE FUNCTION log_shift_changes()
+    RETURNS TRIGGER AS
+$$
+DECLARE
+    is_recursive BOOLEAN;
+BEGIN
+    -- check if the function is being executed recursively
+    is_recursive := TG_OP = 'INSERT' AND EXISTS (SELECT 1
+                                                 FROM shifts
+                                                 WHERE shift_id = NEW.shift_id);
+    -- If its not recursive then proceed
+    IF NOT is_recursive THEN
+        IF TG_OP = 'INSERT' THEN
+            INSERT INTO shifts (operation, staff_id, shift_start, shift_end, attendance_status, change_timestamp)
+            VALUES ('INSERT', NEW.staff_id, NEW.shift_start, NEW.shift_end, OLD.attendance_status, NOW());
+        ELSIF TG_OP = 'UPDATE' THEN
+            UPDATE shifts
+            SET shift_start      = NEW.shift_start,
+                shift_end        = NEW.shift_end,
+                change_timestamp = NOW()
+            WHERE shift_id = OLD.shift_id;
+        ELSIF TG_OP = 'DELETE' THEN
+            INSERT INTO shifts(operation, shift_id, staff_id, shift_start, shift_end, attendance_status,
+                               change_timestamp)
+            VALUES ('DELETE', OLD.shift_id, OLD.staff_id, OLD.shift_start, OLD.shift_end, OLD.attendance_status, NOW());
+        END IF;
+    END IF;
+
+    RETURN NULL;
+END;
+$$ LANGUAGE plpgsql;

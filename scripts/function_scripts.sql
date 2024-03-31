@@ -171,26 +171,23 @@ $$
     LANGUAGE plpgsql;
 
 -- for updating shift info
-CREATE OR REPLACE FUNCTION update_shift_info(cur_shift_id INT, new_staff_id INT, new_shift_start TIMESTAMP,
-                                             new_shift_end TIMESTAMP)
-    RETURNS VOID AS
+CREATE OR REPLACE FUNCTION update_shift_info(cur_shift_id INT, new_staff_id INT, new_shift_start TIMESTAMP, new_shift_end TIMESTAMP)
+RETURNS VOID AS
 $$
+DECLARE
+    change_timestamp TIMESTAMP;
 BEGIN
+    change_timestamp := NOW();
     UPDATE shifts
-    SET staff_id    = new_staff_id,
+    SET
+        staff_id = new_staff_id,
         shift_start = new_shift_start,
-        shift_end   = new_shift_end
+        shift_end = new_shift_end,
+        change_timestamp = change_timestamp
     WHERE shift_id = cur_shift_id;
+    INSERT INTO shifts (operation, shift_id, staff_id, shift_start, shift_end, change_timestamp)
+    VALUES ('UPDATE', cur_shift_id, new_staff_id, new_shift_start, new_shift_end, change_timestamp);
+
 END;
 $$
-    LANGUAGE plpgsql;
--- for recording attendance
-CREATE OR REPLACE FUNCTION record_attendance_function(cur_staff_id INT, cur_shift_id INT, cur_attendance_status BOOLEAN)
-    RETURNS VOID AS
-$$
-BEGIN
-    INSERT INTO attendance (staff_id, shift_id, attendance_status, attendance_time)
-    VALUES (cur_staff_id, cur_shift_id, cur_attendance_status, CURRENT_TIMESTAMP);
-END;
-$$
-    LANGUAGE plpgsql;
+LANGUAGE plpgsql;
