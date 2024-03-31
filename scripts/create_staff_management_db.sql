@@ -1,6 +1,6 @@
-DROP TABLE IF EXISTS staff;
-DROP TABLE IF EXISTS shifts;
-DROP TABLE IF EXISTS attendance;
+DROP TABLE IF EXISTS staff CASCADE ;
+DROP TABLE IF EXISTS shifts CASCADE ;
+DROP TABLE IF EXISTS attendance CASCADE ;
 
 CREATE TABLE staff
 (
@@ -21,6 +21,7 @@ CREATE TABLE shifts
     staff_id        INT NOT NULL,
     shift_start     TIMESTAMP NOT NULL,
     shift_end       TIMESTAMP NOT NULL,
+    attendance_status   BOOLEAN,
     CONSTRAINT fk_staff_shift FOREIGN KEY (staff_id) REFERENCES staff (staff_id)
 );
 
@@ -30,9 +31,7 @@ CREATE TABLE attendance
     staff_id        INT NOT NULL,
     shift_id        INT NOT NULL,
     attendance_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    attendance_status BOOLEAN,
     CONSTRAINT fk_staff_attendance FOREIGN KEY (staff_id) REFERENCES staff (staff_id),
     CONSTRAINT fk_shift_attendance FOREIGN KEY (shift_id) REFERENCES shifts (shift_id)
 );
-
-ALTER TABLE attendance
-ADD COLUMN attendance_status BOOLEAN;
